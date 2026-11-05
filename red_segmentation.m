@@ -1,7 +1,7 @@
 function [mask, hsv_img] = red_segmentation(img, param)
 % RED_SEGMENTATION Create a cleaned red mask using HSV and RGB rules.
 if size(img,3) ~= 3
-    error('输入图像必须是彩色图像');
+    error('Input must be an RGB color image');
 end
 
 img = im2double(img);

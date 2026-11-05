@@ -14,14 +14,14 @@ debug_info.best_core_score = -1;
 debug_info.best_full_score = -1;
 debug_info.best_red_fraction = 0;
 verbose = isfield(param, 'debug_candidates') && param.debug_candidates;
-fprintf('  候选诊断：连通域 %d，尺寸通过 %d，形状通过 %d；超过旧面积上限 %d\n', ...
+fprintf('  Candidates: %d regions, %d size passes, %d shape passes; %d above legacy area limit\n', ...
         diagnostics.regions, diagnostics.size_pass, ...
         diagnostics.shape_pass, diagnostics.above_old_max_area);
 if isempty(candidates)
-    fprintf('  未找到候选八边形，NCC 未计算\n');
+    fprintf('  No candidate octagons; NCC not computed\n');
     return;
 end
-fprintf('  找到 %d 个候选区域\n', numel(candidates));
+fprintf('  Found %d candidate regions\n', numel(candidates));
 
 % Match vertex winding and the starting corner before rectification.
 target_winding = polygon_winding(template_pts);
@@ -43,7 +43,7 @@ for k = 1:numel(candidates)
     if red_fraction < 0.20
         red_rejected = red_rejected + 1;
         if verbose
-            fprintf('    候选%02d (%.0f, %.0f): 红色占比 %.2f，颜色排除\n', ...
+            fprintf('    Candidate %02d (%.0f, %.0f): red fraction %.2f, rejected by color\n', ...
                     k, center(1), center(2), red_fraction);
         end
         continue;
@@ -56,7 +56,7 @@ for k = 1:numel(candidates)
     [rectified, ~, warp_status] = rectify_octagon(img, shifted_pts, template_pts, size(template));
     if isempty(rectified)
         if verbose
-            fprintf('    候选%02d (%.0f, %.0f): 红色占比 %.2f，校正失败：%s\n', ...
+            fprintf('    Candidate %02d (%.0f, %.0f): red fraction %.2f, rectification failed: %s\n', ...
                     k, center(1), center(2), red_fraction, warp_status);
         end
         continue;
@@ -66,7 +66,7 @@ for k = 1:numel(candidates)
     end
     [score, ncc_reason, ncc_detail] = compute_ncc_with_mask(rectified, template, template_pts);
     if verbose
-        fprintf('    候选%02d (%.0f, %.0f): 红色占比 %.2f，NCC %.3f（%s）\n', ...
+        fprintf('    Candidate %02d (%.0f, %.0f): red fraction %.2f, NCC %.3f (%s)\n', ...
                 k, center(1), center(2), red_fraction, score, ncc_reason);
     end
     if score > best_score
@@ -80,7 +80,7 @@ for k = 1:numel(candidates)
     end
 end
 if red_rejected > 0
-    fprintf('  排除颜色不符合红色标志牌的候选 %d 个\n', red_rejected);
+    fprintf('  Rejected %d candidates with insufficient red coverage\n', red_rejected);
 end
 end
 

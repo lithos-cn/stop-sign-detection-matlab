@@ -12,3 +12,5 @@
 Thumbs.db
 .env
 .env.*
+# Office lock files
+~$*

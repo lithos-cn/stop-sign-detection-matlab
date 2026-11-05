@@ -3,7 +3,7 @@ function [rectified, tform, status] = rectify_octagon(img, src_pts, dst_pts, out
 
 rectified = [];
 tform = [];
-status = '校正尚未开始';
+status = 'Rectification not started';
 
 try
     src_pts = double(src_pts);
@@ -11,7 +11,7 @@ try
 
     % Require eight source and destination vertices.
     if size(src_pts,1) ~= 8 || size(dst_pts,1) ~= 8
-        status = '源顶点或模板顶点数量不是8';
+        status = 'Source and template must each have eight vertices';
         return;
     end
 
@@ -31,9 +31,9 @@ try
     % Reject empty or nearly black results.
     if isempty(rectified) || mean(rectified(:)) < 1
         rectified = [];
-        status = '变换结果为空或几乎全黑';
+        status = 'Warped patch is empty or nearly black';
     else
-        status = '已校正';
+        status = 'Rectified';
     end
 
 catch ME
