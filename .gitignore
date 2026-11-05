@@ -1,0 +1,14 @@
+# Runtime output (curated figures are tracked in examples/)
+/results/
+/tmp/
+/dist/
+*.asv
+*.autosave
+*.mlsettings
+*.log
+*.zip
+*.rar
+.DS_Store
+Thumbs.db
+.env
+.env.*
